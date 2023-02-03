@@ -48,7 +48,7 @@ app.get('/callback', (req, res) => {
             //     expiresIn: expires_in
             // })
 
-            res.redirect('http://localhost:3000/' + querystring.stringify({
+            res.redirect('http://localhost:3000/#' + querystring.stringify({
                 access_token: access_token,
                 refresh_token: refresh_token,
                 expires_in: expires_in
