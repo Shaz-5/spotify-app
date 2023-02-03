@@ -1,0 +1,12 @@
+node_modules
+build
+npm-debug.log
+.nyc
+.env
+.DS_Store
+.nyc_output/
+coverage/
+node_modules/
+npm-debug.log
+package-lock.json
+test/*.log
