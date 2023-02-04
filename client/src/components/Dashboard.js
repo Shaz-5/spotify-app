@@ -7,8 +7,9 @@ const spotifyApi = new SpotifyWebApi({
 })
 
 const Dashboard = (props) => {
-console.log(props)
+
     const accessToken = useAuth(props.access_token, props.refresh_token, props.expires_in);
+    // console.log('AccessToken: ',accessToken)
 
     return ( 
         <div>

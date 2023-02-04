@@ -3,10 +3,13 @@ const express = require('express');
 const cors = require('cors');
 const SpotifyWebApi = require('spotify-web-api-node');
 const querystring = require('querystring');
+const bodyParser = require('body-parser');
 
 const app = express();
 
 app.use(cors());
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 const redirect_uri = process.env.REDIRECT_URI;
 const client_id = process.env.CLIENT_ID;
@@ -62,10 +65,11 @@ app.get('/callback', (req, res) => {
 });
 
 // REFRESH
-app.get('/refresh', (req, res) => {
+app.post('/refresh', (req, res) => {
 
-    const { refresh_token } = req.body.refreshToken;
-    spotifyApi.setRefreshToken(refresh_token);
+    const refreshToken = req.body.refreshToken;
+    // console.log(refreshToken)
+    spotifyApi.setRefreshToken(refreshToken);
 
     spotifyApi.refreshAccessToken().then(
         function(data) {
