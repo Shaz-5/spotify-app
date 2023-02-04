@@ -1,7 +1,7 @@
-const TrackSearchResult = ({track}) => {
+const TrackSearchResult = ({track, chooseTrack}) => {
 
     const handlePlay = ()=>{
-        
+        chooseTrack(track);
     };
 
     return ( 

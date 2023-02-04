@@ -14,6 +14,7 @@ const Dashboard = (props) => {
 
     const [search, setSearch] = useState("");
     const [searchResults, setSearchResults] = useState([]);
+    const [deviceId, setDeviceId] = useState("");
 
     useEffect(()=>{
 
@@ -22,9 +23,29 @@ const Dashboard = (props) => {
         }
         else {
             spotifyApi.setAccessToken(accessToken);
+
+            spotifyApi.getMyDevices()
+            .then(function(data) {
+                const deviceId = (data.body.devices[0].id);
+                // console.log(deviceId);
+            }).catch(function(err) {
+                console.log('Something went wrong!', err);
+            });
         }
 
     }, [accessToken]);
+
+    function chooseTrack(track) {
+        spotifyApi.play({
+            device_id: deviceId,
+            uris: [`spotify:track:${track}`]
+          })
+          .then(function(data) {
+            console.log('Song is playing on the device with id ', deviceId);
+          }).catch(function(err) {
+            console.log('Something went wrong!', err);
+          });
+    }
 
     // Search
     useEffect(()=>{
@@ -68,7 +89,7 @@ const Dashboard = (props) => {
             onChange={(e)=>{setSearch(e.target.value)}}/>
 
             <div>{ searchResults.map(track=>{
-                return <TrackSearchResult  track = {track} key = {track.uri} />
+                return <TrackSearchResult  track = {track} key = {track.uri} chooseTrack={chooseTrack}/>
             })}</div>
 
         </Fragment>
