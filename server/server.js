@@ -55,7 +55,7 @@ app.get('/callback', (req, res) => {
             }));
         },
         function(err) {
-            res.redirect('http://localhost:3000/' + querystring.stringify({error: 'invalid_token'}));
+            res.redirect('http://localhost:3000/#' + querystring.stringify({error: 'invalid_token'}));
             console.log('Invalid Token! : ', err);
         }
     );
