@@ -4,7 +4,7 @@ import useAuth from "./useAuth";
 import TrackSearchResult from "./TrackSearchResult";
 
 const spotifyApi = new SpotifyWebApi({
-    clientId: '153e4a481a6d461bb2d8c8d1ef3bbcc8'
+    clientId: '370e3967807b42af8ef11a6464151d84'
 })
 
 const Dashboard = (props) => {
@@ -38,12 +38,12 @@ const Dashboard = (props) => {
     function chooseTrack(track) {
         spotifyApi.play({
             device_id: deviceId,
-            uris: [`spotify:track:${track}`]
+            uris: [`${track.uri}`]
           })
           .then(function(data) {
-            console.log('Song is playing on the device with id ', deviceId);
+            console.log('Song is playing on the device', deviceId);
           }).catch(function(err) {
-            console.log('Something went wrong!', err);
+            console.log('Something went wrong!', err.message);
           });
     }
 
