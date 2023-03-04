@@ -15,6 +15,7 @@ const Dashboard = (props) => {
     const [search, setSearch] = useState("");
     const [searchResults, setSearchResults] = useState([]);
     const [deviceId, setDeviceId] = useState("");
+    const [popular, setPopular] = useState([]);
 
     useEffect(()=>{
 
@@ -59,17 +60,11 @@ const Dashboard = (props) => {
             if(cancel) return
             setSearchResults(
                 res.body.tracks.items.map((track)=>{
-
-                    const biggestAlbumImage = track.album.images.reduce((biggest, image)=>{
-                        if(image.height > biggest.height) return image
-                        return biggest
-                    }, track.album.images[0]);
-
                     return {
                         artist: track.artists[0].name,
                         title: track.name,
                         uri: track.uri,
-                        albumUrl: biggestAlbumImage.url
+                        albumUrl: track.album.images[1].url,
                     }
                 })
             )
@@ -82,51 +77,57 @@ const Dashboard = (props) => {
         
     }, [search, accessToken]);
 
+    useEffect(()=>{
+        
+        if(!accessToken) return
+        spotifyApi.getPlaylistTracks('37i9dQZEVXbMDoHDwVN2tF')
+        .then((res)=>{
+            setPopular(
+                res.body.items.map((track)=>{
+                    return {
+                        artist: track.track.artists[0].name,
+                        title: track.track.name,
+                        uri: track.track.uri,
+                        albumUrl: track.track.album.images[1].url,
+                    }
+                })
+            )
+        })
+        .catch((err)=>{
+            console.error(err);
+        });
+
+    }, [accessToken, popular]);
+
     return ( 
         <Fragment>
 
-            <div style={{margin: '0', height: '300px', position:'relative', background: '#191414', maxWidth: '100%'}}>
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                    <h1 style={{margin: '0', 
-                        position: 'absolute', 
-                        color: 'grey', 
-                        padding: '20px', 
-                        left: '50%', 
-                        top: '40%',
-                        fontSize: '40px', 
-                        transform: 'translate(-50%, -50%)'
-                    }}>Play Your <span style={{color: '#1DB954', fontSize: '1.1em'}}>Favourite</span> Music</h1>
+            <div className="header_background">
+                <div className="title_div">
+                    <h1 className="title">Play Your <span style={{color: '#1DB954', fontSize: '1.1em'}}>Favourite</span> Music</h1>
                 </div>
+                {/* <img className="spotify_logo" src={process.env.PUBLIC_URL + '/Spotify_Logo_RGB_Green.png'} alt="Spotify" /> */}
 
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                    <input type="search" placeholder="Search Songs / Artists.." value={search}
-                    onChange={(e)=>{setSearch(e.target.value)}} 
-                    style={{borderRadius: '20px', 
-                        margin:'10px 0', 
-                        padding: '10px', 
-                        paddingLeft: '10px', 
-                        paddingRight: '10px', 
-                        border: 'none', 
-                        position:'absolute', 
-                        height: '35px', 
-                        maxHeight: '35px',
-                        bottom: '15%', 
-                        width: '70%',  
-                        left: '50%', 
-                        top:'70%', 
-                        transform: 'translate(-50%, -50%)'
-                    }}/>
+                <div className="search_div">
+                    <input className="search" type="search" placeholder="Search Songs / Artists.." value={search} onChange={(e)=>{setSearch(e.target.value)}} />
                 </div>
             </div>
 
-            <div style={{display:'grid',gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',gridGap: '30px', margin: '30px'}}>{ searchResults.map(track=>{
+            {!search && <h2 style={{padding: '5px', marginLeft: '25px'}}>Most <span style={{color: '#1DB954'}}>Popular</span> Right Now</h2>}
+            {!search && <div className="results">{ popular.map(track=>{
                 return <TrackSearchResult  track = {track} key = {track.uri} chooseTrack={chooseTrack}/>
-            })}</div>
+            })}</div>}
 
+            {search && <div className="results">{ searchResults.map(track=>{
+                return <TrackSearchResult  track = {track} key = {track.uri} chooseTrack={chooseTrack}/>
+            })}</div>}
 
-        {/* <div style={{margin: '0', height: '80px', position:'relative', background: '#191414', maxWidth: '100%', }}>
-            <footer style={{margin: '0', position: 'absolute', color: 'grey', padding: '20px', left: '50%', top: '40%', transform: 'translate(-50%, -50%)'}}>Copyright &copy; </footer>
-        </div> */}
+            <div style={{height: '191px'}}></div>
+            <div className="footer_div">
+                <footer className="footer">
+                    Copyright &copy;
+                </footer>
+            </div>
 
         </Fragment>
     );
