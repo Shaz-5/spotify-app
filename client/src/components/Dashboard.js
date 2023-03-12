@@ -16,6 +16,8 @@ const Dashboard = (props) => {
     const [searchResults, setSearchResults] = useState([]);
     const [deviceId, setDeviceId] = useState("");
     const [popular, setPopular] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [resultsPerPage, setResultsPerPage] = useState(20);
 
     useEffect(()=>{
 
@@ -55,7 +57,7 @@ const Dashboard = (props) => {
         if(!accessToken) return
 
         let cancel = false;
-        spotifyApi.searchTracks(search)
+        spotifyApi.searchTracks(search, { limit: resultsPerPage })
         .then((res)=>{
             if(cancel) return
             setSearchResults(
@@ -76,6 +78,25 @@ const Dashboard = (props) => {
         return ()=> cancel = true;
         
     }, [search, accessToken]);
+
+    const handleLoadMore = () => {
+        setCurrentPage(currentPage + 1); // increment page number
+        spotifyApi.searchTracks(search, { limit: resultsPerPage, offset: currentPage * resultsPerPage })
+          .then((res) => {
+            setSearchResults((prevResults) => [
+              ...prevResults,
+              ...res.body.tracks.items.map((track) => ({
+                artist: track.artists[0].name,
+                title: track.name,
+                uri: track.uri,
+                albumUrl: track.album.images[1].url,
+              })),
+            ]);
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+      };
 
     useEffect(()=>{
         
@@ -106,23 +127,29 @@ const Dashboard = (props) => {
                 <div className="title_div">
                     <h1 className="title">Play Your <span style={{color: '#1DB954', fontSize: '1.1em'}}>Favourite</span> Music</h1>
                 </div>
-                {/* <img className="spotify_logo" src={process.env.PUBLIC_URL + '/Spotify_Logo_RGB_Green.png'} alt="Spotify" /> */}
+                
+                {/* <div className="logo_div">
+                    <img className="spotify_logo" src={process.env.PUBLIC_URL + '/Spotify_Logo_RGB_Green.png'} alt="Spotify" />
+                </div> */}
 
                 <div className="search_div">
                     <input className="search" type="search" placeholder="Search Songs / Artists.." value={search} onChange={(e)=>{setSearch(e.target.value)}} />
                 </div>
             </div>
 
-            {!search && <h2 style={{padding: '5px', marginLeft: '25px'}}>Most <span style={{color: '#1DB954'}}>Popular</span> Right Now</h2>}
+            {!search && <h2 style={{marginLeft: '32px'}}>Most <span style={{color: '#1DB954'}}>Popular</span> Right Now</h2>}
             {!search && <div className="results">{ popular.map(track=>{
                 return <TrackSearchResult  track = {track} key = {track.uri} chooseTrack={chooseTrack}/>
             })}</div>}
 
             {search && <div className="results">{ searchResults.map(track=>{
-                return <TrackSearchResult  track = {track} key = {track.uri} chooseTrack={chooseTrack}/>
-            })}</div>}
+                return <TrackSearchResult  track = {track} key = {track.uri} chooseTrack={chooseTrack}/>})}
+            </div>
+            }
+            {searchResults.length > 0 && searchResults.length % resultsPerPage === 0 && (
+            <div className="load_more_div"><button className="load_more" onClick={handleLoadMore}>Load More</button></div>)}
 
-            <div style={{height: '191px'}}></div>
+            <div style={{height: '100px'}}></div>
             <div className="footer_div">
                 <footer className="footer">
                     Copyright &copy;
