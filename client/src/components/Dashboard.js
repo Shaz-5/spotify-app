@@ -137,7 +137,7 @@ const Dashboard = (props) => {
                 </div>
             </div>
 
-            {!search && <h2 style={{marginLeft: '32px'}}>Most <span style={{color: '#1DB954'}}>Popular</span> Right Now</h2>}
+            {!search && popular && <h2 style={{marginLeft: '32px'}}>Most <span style={{color: '#1DB954'}}>Popular</span> Right Now</h2>}
             {!search && <div className="results">{ popular.map(track=>{
                 return <TrackSearchResult  track = {track} key = {track.uri} chooseTrack={chooseTrack}/>
             })}</div>}
@@ -149,7 +149,7 @@ const Dashboard = (props) => {
             {searchResults.length > 0 && searchResults.length % resultsPerPage === 0 && (
             <div className="load_more_div"><button className="load_more" onClick={handleLoadMore}>Load More</button></div>)}
 
-            <div style={{height: '100px'}}></div>
+            {!popular && !searchResults && <div style={{height: '251px'}}></div>}
             <div className="footer_div">
                 <footer className="footer">
                     Copyright &copy;
