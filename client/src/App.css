@@ -1,6 +1,6 @@
 div.header_background {
   margin: 0;
-  height: 240px;
+  height: 300px;
   position: relative;
   background: #191414;
   max-width: 100%;
@@ -24,11 +24,11 @@ div.title_div {
   padding: 20px;
   font-size: 40px;
   left: 50%;
-  top: 40%;
+  top: 30%;
   transform: translate(-50%, -50%);
 }
 
-/* .logo_div {
+.logo_div {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -37,7 +37,9 @@ div.title_div {
 .spotify_logo {
   max-width: 120px;
   height: auto;
-} */
+  position: absolute;
+  top: 55%;
+}
 
 div.search_div {
   display: flex;
@@ -56,9 +58,12 @@ div.search_div {
   height: 35px;
   max-height: 35px;
   bottom: 10%;
-  width: 70%;
-  left: 50%;
-  top: 75%;
+  width: 54%;
+  outline: none;
+  left: 48%;
+  top: 77%;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
   transform: translate(-50%, -50%);
 }
 
@@ -72,12 +77,12 @@ div.search_div {
   position: absolute;
   height: 35px;
   max-height: 35px;
-  bottom: 10%;
+  bottom:10%;
   width: 8%;
-  left: 81%;
+  left: 79%;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
-  top: 75%;
+  top: 77%;
   transform: translate(-50%, -50%);
   background-color: #1DB954;
   cursor: pointer;

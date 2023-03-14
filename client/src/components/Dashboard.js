@@ -128,17 +128,17 @@ const Dashboard = (props) => {
                     <h1 className="title">Play Your <span style={{color: '#1DB954', fontSize: '1.1em'}}>Favourite</span> Music</h1>
                 </div>
                 
-                {/* <div className="logo_div">
+                <div className="logo_div">
                     <img className="spotify_logo" src={process.env.PUBLIC_URL + '/Spotify_Logo_RGB_Green.png'} alt="Spotify" />
-                </div> */}
+                </div>
 
-                <form className="search_div" onSubmit={(e) => { e.preventDefault(); setSearch(e.target.elements.search.value) }}>
-                    <input className="search" name="search" type="search" placeholder="Search Songs / Artists.." />
+                <form className="search_div" onSubmit={(e) => { e.preventDefault(); setSearch(e.target.elements.search.value); }}>
+                    <input className="search" name="search" type="search" placeholder="Search Songs / Artists.." onChange={(e)=>{if(e.target.value === ""){setSearch("")}}}/>
                     <button className="search_button" type="submit"><i className="fa fa-search"></i></button>
                 </form>
             </div>
 
-            {!search && <h2 style={{marginLeft: '32px'}}>Most <span style={{color: '#1DB954'}}>Popular</span> Right Now</h2>}
+            {!search && popular && <h2 style={{marginLeft: '32px'}}>Most <span style={{color: '#1DB954'}}>Popular</span> Right Now</h2>}
             {!search && <div className="results">{ popular.map(track=>{
                 return <TrackSearchResult  track = {track} key = {track.uri} chooseTrack={chooseTrack}/>
             })}</div>}
@@ -150,6 +150,7 @@ const Dashboard = (props) => {
             {searchResults.length > 0 && searchResults.length % resultsPerPage === 0 && (
             <div className="load_more_div"><button className="load_more" onClick={handleLoadMore}>Load More</button></div>)}
 
+            <div style={{height: '40px'}}></div>
             <div className="footer_div">
                 <footer className="footer">
                     Copyright &copy;
